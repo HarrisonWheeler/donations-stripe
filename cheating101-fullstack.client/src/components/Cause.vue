@@ -5,7 +5,7 @@
       <h4>{{ cause.title }}</h4>
       <p>{{ cause.body }}</p>
       <div class="d-flex justify-content-between align-items-center p-2">
-        <h6>${{ cause.donationAmount }}</h6>
+        <h6>${{ cause.price }}</h6>
         <form id="payment-form">
           <div id="payment-element">
             <!--Stripe.js injects the Payment Element-->
