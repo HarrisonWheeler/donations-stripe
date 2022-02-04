@@ -6,16 +6,10 @@
       <p>{{ cause.body }}</p>
       <div class="d-flex justify-content-between align-items-center p-2">
         <h6>${{ cause.price }}</h6>
-        <form id="payment-form">
-          <div id="payment-element">
-            <!--Stripe.js injects the Payment Element-->
-          </div>
-          <button id="submit">
-            <div class="spinner hidden" id="spinner"></div>
-            <span id="button-text">Pay now</span>
-          </button>
-          <div id="payment-message" class="hidden"></div>
-        </form>
+        <button class="btn btn-primary" @click="addToCart()">
+          Add To Cart
+        </button>
+        <!-- NOTE Stripe stuff goes here -->
       </div>
     </div>
   </div>
@@ -23,6 +17,9 @@
 
 
 <script>
+import { causesService } from "../services/CausesService";
+import { logger } from "../utils/Logger";
+import Pop from "../utils/Pop";
 export default {
   props: {
     cause: {
@@ -30,8 +27,18 @@ export default {
       required: true,
     },
   },
-  setup() {
-    return {};
+  setup(props) {
+    return {
+      async addToCart() {
+        try {
+          await causesService.addToCart(props.cause)
+          Pop.toast(`${props.cause.title} was added to the cart!`, 'success')
+        } catch (error) {
+          Pop.toast(error.message, 'error')
+          logger.log(error)
+        }
+      }
+    };
   },
 };
 </script>

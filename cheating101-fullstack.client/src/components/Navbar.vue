@@ -1,12 +1,17 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
     <router-link class="navbar-brand d-flex" :to="{ name: 'Home' }">
-      <div class="d-flex flex-column align-items-center">
+      <div class="d-flex align-items-center">
         <img
           alt="deflated football"
           src="https://www.nicepng.com/png/detail/643-6432590_walkawaynfl-deflated-football-patriots.png"
           height="45"
         />
+        <i
+          class="mdi mdi-cart ms-3 selectable text-light btn btn-primary"
+          data-bs-target="#donations-cart"
+          data-bs-toggle="modal"
+        ></i>
       </div>
     </router-link>
     <button
