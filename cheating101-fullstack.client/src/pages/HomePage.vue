@@ -10,14 +10,16 @@
     </template>
     <template #modal-body>
       <div v-for="c in cart" :key="c.id">
-        <div class="d-flex">{{ c.title }} - ${{ c.price }}</div>
+        <div class="d-flex">
+          Quantity: {{ c.quantity }} - {{ c.title }} - ${{ c.price }}
+        </div>
       </div>
       <div class="mt-5">
         <h6>Total Price: ${{ cartTotal }}</h6>
       </div>
     </template>
     <template #modal-button>
-      <button class="btn btn-success">Checkout</button>
+      <button class="btn btn-success" @click="checkout()">Checkout</button>
     </template>
   </Modal>
 </template>
@@ -47,7 +49,15 @@ export default {
         let total = 0
         AppState.cart.forEach(c => total += c.price)
         return total
-      })
+      }),
+      async checkout() {
+        try {
+          await causesService.checkout()
+        } catch (error) {
+          Pop.toast(error.message, 'error')
+          logger.log(error)
+        }
+      }
     };
   },
 };

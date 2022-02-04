@@ -1,7 +1,5 @@
 import BaseController from '../utils/BaseController'
 
-// NOTE need to store stripe key in the .env
-
 export class StripeController extends BaseController {
   constructor() {
     super('api/stripe')
@@ -10,10 +8,12 @@ export class StripeController extends BaseController {
   }
 
   async createCheckout(req, res, next) {
-    // try {
-    // NOTE need to have actual data in the database to simulate real data - build that funcionality first
-    // } catch (error) {
-    //   next(error)
-    // }
+    try {
+      // NOTE getting properly formatted obj from the client - just need to handle server logic now
+      const body = req.body
+      res.send(body)
+    } catch (error) {
+      next(error)
+    }
   }
 }

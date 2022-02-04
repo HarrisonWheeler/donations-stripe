@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-4">
-    <div class="bg-light border rounded shadow p-2">
-      <img :src="cause.imgUrl" alt="cause photo" class="img-fluid rounded" />
+    <div class="bg-light border rounded shadow height p-2">
+      <img :src="cause.imgUrl" alt="cause photo" class="rounded img-fluid" />
       <h4>{{ cause.title }}</h4>
       <p>{{ cause.body }}</p>
       <div class="d-flex justify-content-between align-items-center p-2">
@@ -29,9 +29,9 @@ export default {
   },
   setup(props) {
     return {
-      async addToCart() {
+      addToCart() {
         try {
-          await causesService.addToCart(props.cause)
+          causesService.addToCart(props.cause)
           Pop.toast(`${props.cause.title} was added to the cart!`, 'success')
         } catch (error) {
           Pop.toast(error.message, 'error')
