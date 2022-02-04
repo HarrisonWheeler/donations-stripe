@@ -9,6 +9,7 @@ class CausesService {
   }
 
   addToCart(cause) {
+    // NOTE checking to see if an item is already in the cart - if it is, increment the cart obj - else, add it to the cart
     const found = AppState.cart.find(c => c.id == cause.id)
     if (found) {
       found.quantity++
@@ -19,13 +20,13 @@ class CausesService {
   }
 
   async checkout() {
-    const formattedCart = this.formatObj()
+    const formattedCart = this.formatCart()
     const res = await api.post('api/stripe/create-checkout', formattedCart)
     logger.log(res.data)
   }
 
-  formatObj() {
-    // NOTE need to double check stripe docs on how we need to have the object formatted - or
+  formatCart() {
+    // NOTE re-formats the data in the cart into an array with the id and qty of each item in the cart, so we can send just that to the server
     let items = []
     for (let i = 0; i < AppState.cart.length; i++) {
       let cartItem = AppState.cart[i]
