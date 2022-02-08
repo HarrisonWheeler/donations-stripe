@@ -1,4 +1,5 @@
 import { AppState } from "../AppState"
+import { formatCart } from "../utils/HelperFunctions"
 import { logger } from "../utils/Logger"
 import { api } from "./AxiosService"
 
@@ -20,19 +21,9 @@ class CausesService {
   }
 
   async checkout() {
-    const formattedCart = this.formatCart()
-    const res = await api.post('api/stripe/create-checkout', formattedCart)
+    const formattedCart = formatCart()
+    const res = await api.post('api/stripe/create-checkout-session', formattedCart)
     logger.log(res.data)
-  }
-
-  formatCart() {
-    // NOTE re-formats the data in the cart into an array with the id and qty of each item in the cart, so we can send just that to the server
-    let items = []
-    for (let i = 0; i < AppState.cart.length; i++) {
-      let cartItem = AppState.cart[i]
-      items[i] = { "id": cartItem.id, "qty": cartItem.quantity }
-    }
-    return items
   }
 }
 

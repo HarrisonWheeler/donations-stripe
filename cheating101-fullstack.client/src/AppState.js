@@ -5,6 +5,6 @@ export const AppState = reactive({
   user: {},
   account: {},
   causes: [],
-  cart: []
-
+  cart: [],
+  redirectURL: null
 })

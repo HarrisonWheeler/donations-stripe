@@ -1,33 +1,46 @@
-// const express = require('express')
-// const app = express()
-// // This is your test secret API key.
-// const stripe = require('stripe')('sk_test_51KPCjnBBgoRZbR4cvU4lpsp46iP7uusWjHJdnaPeFsMmohEqmdjw1M5J5KrzT39hliFFfKuNG1PPm1ON72p1AnAo00pmqPDrwK')
+/* eslint-disable space-before-function-paren */
+import { dbContext } from '../db/DbContext'
+import Stripe from 'stripe'
+// NOTE need to supply dev test key, and obj with current api version as arguments
+const stripe = new Stripe(process.env.STRIPE_TEST_KEY, {
+  apiVersion: '2020-08-27'
+})
 
-// app.use(express.static('public'))
-// app.use(express.json())
+class StripeService {
+  async createCheckout(cart) {
+    const formattedCart = await this.getCartItems(cart)
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: formattedCart.map(item => {
+        return {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: item.title
+            },
+            // NOTE with stripe this HAS to be formatted in cents/pennies
+            unit_amount: item.price * 100
+          },
+          quantity: item.quantity
+        }
+      }),
+      success_url: `${process.env.SERVER_URL}/success`,
+      cancel_url: `${process.env.SERVER_URL}/cancel`
+    })
+    return session
+  }
 
-// const calculateOrderAmount = (items) => {
-//   // Replace this constant with a calculation of the order's amount
-//   // Calculate the order total on the server to prevent
-//   // people from directly manipulating the amount on the client
-//   return 1400
-// }
+  async getCartItems(cart) {
+    // NOTE this is getting the full document of each of the cart items passed in from the client so we can access the price - we then return this array of documents to the create checkout method, map over the the array, and format the object in Stripe's desired format
+    const formattedCart = []
+    for await (const item of cart) {
+      const foundItem = await dbContext.Causes.findById(item.id)
+      foundItem.quantity = item.quantity
+      formattedCart.push(foundItem)
+    }
+    return formattedCart
+  }
+}
 
-// app.post('/create-payment-intent', async (req, res) => {
-//   const { items } = req.body
-
-//   // Create a PaymentIntent with the order amount and currency
-//   const paymentIntent = await stripe.paymentIntents.create({
-//     amount: calculateOrderAmount(items),
-//     currency: 'eur',
-//     automatic_payment_methods: {
-//       enabled: true
-//     }
-//   })
-
-//   res.send({
-//     clientSecret: paymentIntent.client_secret
-//   })
-// })
-
-// app.listen(4242, () => console.log('Node server listening on port 4242!'))
+export const stripeService = new StripeService()
