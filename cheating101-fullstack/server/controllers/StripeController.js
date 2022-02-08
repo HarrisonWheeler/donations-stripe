@@ -5,12 +5,12 @@ export class StripeController extends BaseController {
   constructor() {
     super('api/stripe')
     this.router
+      // NOTE not authenticating for a 'guest' checkout ability
       .post('/create-checkout-session', this.createCheckout)
   }
 
   async createCheckout(req, res, next) {
     try {
-      // NOTE getting properly formatted arr from the client - just need to handle server logic now
       const redirectURL = await stripeService.createCheckout(req.body)
       res.send(redirectURL)
     } catch (error) {

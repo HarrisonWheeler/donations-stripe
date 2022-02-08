@@ -1,6 +1,4 @@
 import { AppState } from "../AppState"
-import { formatCart } from "../utils/HelperFunctions"
-import { logger } from "../utils/Logger"
 import { api } from "./AxiosService"
 
 class CausesService {
@@ -10,7 +8,7 @@ class CausesService {
   }
 
   addToCart(cause) {
-    // NOTE checking to see if an item is already in the cart - if it is, increment the cart obj - else, add it to the cart
+    // NOTE checking to see if an item is already in the cart - if it is, increment the cart obj - otherwise, add it to the cart
     const found = AppState.cart.find(c => c.id == cause.id)
     if (found) {
       found.quantity++
@@ -21,9 +19,23 @@ class CausesService {
   }
 
   async checkout() {
-    const formattedCart = formatCart()
+    const formattedCart = this.formatCart()
+    if (formattedCart.length == 0) {
+      throw new Error('Cart is empty!')
+    }
     const res = await api.post('api/stripe/create-checkout-session', formattedCart)
-    logger.log(res.data)
+    AppState.redirectURL = res.data.url
+    AppState.cancelURL = res.data.cancelUrl
+  }
+
+  formatCart() {
+    // NOTE re-formats the data in the cart into an array with the id and qty of each item in the cart as an object, so we can send just that to the server - we will let the server dictate price
+    let items = []
+    for (let i = 0; i < AppState.cart.length; i++) {
+      let cartItem = AppState.cart[i]
+      items[i] = { "id": cartItem.id, "quantity": cartItem.quantity }
+    }
+    return items
   }
 }
 

@@ -53,6 +53,9 @@ export default {
       async checkout() {
         try {
           await causesService.checkout()
+          if (AppState.redirectURL) {
+            window.location.replace(AppState.redirectURL)
+          }
         } catch (error) {
           Pop.toast(error.message, 'error')
           logger.log(error)

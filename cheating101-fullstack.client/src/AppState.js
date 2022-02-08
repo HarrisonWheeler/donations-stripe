@@ -6,5 +6,6 @@ export const AppState = reactive({
   account: {},
   causes: [],
   cart: [],
-  redirectURL: null
+  redirectURL: null,
+  cancelURL: null
 })

@@ -1,10 +1,11 @@
-/* eslint-disable space-before-function-paren */
 import { dbContext } from '../db/DbContext'
 import Stripe from 'stripe'
-// NOTE need to supply dev test key, and obj with current api version as arguments
-const stripe = new Stripe(process.env.STRIPE_TEST_KEY, {
+// NOTE need to supply dev test key, and obj with current api version as arguments - 2020-08-27 is newest api version
+const stripe = new Stripe(process.env.NODE_ENV === 'production' ? process.env.STRIPE_PROD_KEY : process.env.STRIPE_TEST_KEY, {
   apiVersion: '2020-08-27'
 })
+
+// TODO make sure to run npm i stripe
 
 class StripeService {
   async createCheckout(cart) {
@@ -25,8 +26,9 @@ class StripeService {
           quantity: item.quantity
         }
       }),
+      // NOTE we will want these to redirect the user AFTER they have either succesfully paid, or cancelled the transaction
       success_url: `${process.env.SERVER_URL}/success`,
-      cancel_url: `${process.env.SERVER_URL}/cancel`
+      cancel_url: `${process.env.SERVER_URL}`
     })
     return session
   }
