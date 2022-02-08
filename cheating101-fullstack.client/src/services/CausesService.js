@@ -26,6 +26,7 @@ class CausesService {
     const res = await api.post('api/stripe/create-checkout-session', formattedCart)
     AppState.redirectURL = res.data.url
     AppState.cancelURL = res.data.cancelUrl
+    AppState.cart = []
   }
 
   formatCart() {
