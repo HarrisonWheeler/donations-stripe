@@ -28,13 +28,14 @@ class CausesService {
 
   async checkout() {
     const formattedCart = this.formatCart()
-    if (formattedCart.length == 0) {
-      throw new Error('Cart is empty!')
+    if (formattedCart.length > 0) {
+      const res = await api.post('api/stripe/create-checkout-session', formattedCart)
+      AppState.redirectURL = res.data.url
+      AppState.cancelURL = res.data.cancelUrl
+      AppState.cart = []
+      return
     }
-    const res = await api.post('api/stripe/create-checkout-session', formattedCart)
-    AppState.redirectURL = res.data.url
-    AppState.cancelURL = res.data.cancelUrl
-    AppState.cart = []
+    throw new Error('Cart is empty!')
   }
 
   formatCart() {
