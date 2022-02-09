@@ -28,7 +28,6 @@ export default {
   },
   setup(props) {
     return {
-
       addToCart() {
         try {
           causesService.addToCart(props.cause)

@@ -1,5 +1,4 @@
 import { AppState } from "../AppState"
-import { saveToLocal } from "../utils/LocalStorage"
 import { api } from "./AxiosService"
 
 class CausesService {
@@ -11,7 +10,6 @@ class CausesService {
 
   removeCartItem(cartItem) {
     AppState.cart = AppState.cart.filter(i => i.id !== cartItem.id)
-    saveToLocal()
   }
 
   addToCart(cause) {
@@ -21,9 +19,8 @@ class CausesService {
       found.quantity++
     } else {
       cause.quantity++
-      AppState.cart.push(cause)
+      AppState.cart = [...AppState.cart, cause]
     }
-    saveToLocal()
   }
 
   async checkout() {

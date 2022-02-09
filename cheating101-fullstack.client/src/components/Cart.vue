@@ -26,6 +26,8 @@ import { causesService } from "../services/CausesService"
 import { logger } from "../utils/Logger"
 import Pop from "../utils/Pop"
 import { AppState } from "../AppState"
+import { watch } from "@vue/runtime-core"
+import { saveToLocal } from "../utils/LocalStorage"
 export default {
   props: {
     cart: {
@@ -33,7 +35,10 @@ export default {
       required: true
     }
   },
-  setup() {
+  setup(props) {
+    watch(() => props.cart, () => {
+      saveToLocal()
+    })
     return {
       cartTotal: computed(() => {
         let total = 0

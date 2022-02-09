@@ -8,13 +8,13 @@
 </template>
 
 <script>
-import { computed, watchEffect } from "vue";
+import { computed, onMounted } from "vue";
 import { AppState } from "./AppState";
 import { loadLocal } from "./utils/LocalStorage";
 export default {
   name: "App",
   setup() {
-    watchEffect(() => {
+    onMounted(() => {
       loadLocal()
     })
     return {
