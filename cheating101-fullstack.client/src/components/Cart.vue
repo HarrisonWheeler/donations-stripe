@@ -1,5 +1,4 @@
 <template>
-  <h4>Donations Cart</h4>
   <div v-for="c in cart" :key="c.id">
     <div class="d-flex justify-content-between">
       Quantity: {{ c.quantity }} - {{ c.title }} - ${{ c.price }}
