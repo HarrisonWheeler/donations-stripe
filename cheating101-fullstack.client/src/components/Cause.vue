@@ -9,7 +9,6 @@
         <button class="btn btn-primary" @click="addToCart()">
           Add To Cart
         </button>
-        <!-- NOTE Stripe stuff goes here -->
       </div>
     </div>
   </div>
@@ -29,6 +28,7 @@ export default {
   },
   setup(props) {
     return {
+
       addToCart() {
         try {
           causesService.addToCart(props.cause)

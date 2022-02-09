@@ -8,11 +8,15 @@
 </template>
 
 <script>
-import { computed } from "vue";
+import { computed, watchEffect } from "vue";
 import { AppState } from "./AppState";
+import { loadLocal } from "./utils/LocalStorage";
 export default {
   name: "App",
   setup() {
+    watchEffect(() => {
+      loadLocal()
+    })
     return {
       appState: computed(() => AppState),
     };

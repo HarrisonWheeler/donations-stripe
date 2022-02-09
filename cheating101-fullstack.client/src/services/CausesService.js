@@ -1,10 +1,17 @@
 import { AppState } from "../AppState"
+import { saveToLocal } from "../utils/LocalStorage"
 import { api } from "./AxiosService"
 
 class CausesService {
+
   async getAllCauses() {
     const res = await api.get('api/causes')
     AppState.causes = res.data
+  }
+
+  removeCartItem(cartItem) {
+    AppState.cart = AppState.cart.filter(i => i.id !== cartItem.id)
+    saveToLocal()
   }
 
   addToCart(cause) {
@@ -16,6 +23,7 @@ class CausesService {
       cause.quantity++
       AppState.cart.push(cause)
     }
+    saveToLocal()
   }
 
   async checkout() {

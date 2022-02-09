@@ -14,16 +14,6 @@
         <div class="modal-body">
           <slot name="modal-body"></slot>
         </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Close
-          </button>
-          <slot name="modal-button"></slot>
-        </div>
       </div>
     </div>
   </div>

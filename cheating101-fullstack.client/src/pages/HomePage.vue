@@ -9,17 +9,7 @@
       <h4>Donations Cart</h4>
     </template>
     <template #modal-body>
-      <div v-for="c in cart" :key="c.id">
-        <div class="d-flex">
-          Quantity: {{ c.quantity }} - {{ c.title }} - ${{ c.price }}
-        </div>
-      </div>
-      <div class="mt-5">
-        <h6>Total Price: ${{ cartTotal }}</h6>
-      </div>
-    </template>
-    <template #modal-button>
-      <button class="btn btn-success" @click="checkout()">Checkout</button>
+      <Cart :cart="cart" />
     </template>
   </Modal>
 </template>
@@ -45,22 +35,6 @@ export default {
     return {
       causes: computed(() => AppState.causes),
       cart: computed(() => AppState.cart),
-      cartTotal: computed(() => {
-        let total = 0
-        AppState.cart.forEach(c => total += c.price)
-        return total
-      }),
-      async checkout() {
-        try {
-          await causesService.checkout()
-          if (AppState.redirectURL) {
-            window.location.replace(AppState.redirectURL)
-          }
-        } catch (error) {
-          Pop.toast(error.message, 'error')
-          logger.log(error)
-        }
-      }
     };
   },
 };
